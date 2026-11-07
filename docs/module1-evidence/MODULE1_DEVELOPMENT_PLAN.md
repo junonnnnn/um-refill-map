@@ -1,7 +1,16 @@
 # Module 1 Development Plan
 
-Status: PROPOSED — review before application implementation
-Date: 2026-11-02
+> **HISTORICAL / SUPERSEDED — original staged development plan.**
+> Preserve the original gates and assessment evidence below; they are not current implementation instructions.
+> Current baseline: Java/XML, Firebase Auth/Firestore, AGP 9.5.1, Gradle 9.6.0, daemon JDK 25.
+> The project has its own Git root/.git on branch vincent; parent-repository and item-lending notes are historical.
+> Debug build and 43 unit tests passed; Vincent reports physical-device Module 1 success.
+> Rules deployment/testing and cross-module acceptance remain unverified.
+> Current requirements: [Module 1 PRD](../../INTEGRATION.md#module-1-requirements); general contracts: [INTEGRATION](../../INTEGRATION.md).
+
+
+Status: COMPLETED ON BRANCH `vincent`
+Date: 2026-11-07 (Updated)
 Owner: Vincent; one shared Android application.
 
 ## 1. Verified local baseline

@@ -2,6 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.UMBorrowBuddy" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="android:borderlessButtonStyle">@style/Widget.UMBorrowBuddy.Button.Borderless</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.UMBorrowBuddy.Button.Outlined</item>
     </style>
 </resources>

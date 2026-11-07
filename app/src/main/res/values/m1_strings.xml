@@ -1,17 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="m1_title">UM BorrowBuddy Login</string>
-    <string name="m1_stage_notice">Use your UM email. This screen is a UI prototype.</string>
-    <string name="m1_email_label">UM email</string>
-    <string name="m1_password_label">Password</string>
-    <string name="m1_login_label">Login</string>
-    <string name="m1_register_label">Register</string>
-    <string name="m1_reset_label">Forgot Password</string>
-    <string name="m1_loading">Signing in</string>
+    <!-- Common / General -->
+    <string name="m1_app_title">UM Water Refill Reporting</string>
+    <string name="m1_cancel">Cancel</string>
+    <string name="m1_logout">Log Out</string>
+    <string name="m1_check_fields">Please check the highlighted fields.</string>
     <string name="m1_invalid_email">Enter an email ending exactly in @siswa.um.edu.my or @um.edu.my.</string>
     <string name="m1_password_required">Enter your password.</string>
-    <string name="m1_check_fields">Please check the highlighted field.</string>
-    <string name="m1_auth_unavailable">Firebase Authentication is not configured. No sign-in request will be sent.</string>
-    <string name="m1_register_unavailable">Register navigation is reserved for a later stage. No registration screen exists yet.</string>
-    <string name="m1_reset_unavailable">Forgot Password navigation is reserved for a later stage. No reset email will be sent.</string>
+    <string name="m1_password_min_length">Password must be at least 8 characters.</string>
+    <string name="m1_password_requires_uppercase">Password must contain at least one uppercase letter (A-Z).</string>
+    <string name="m1_password_requires_lowercase">Password must contain at least one lowercase letter (a-z).</string>
+    <string name="m1_password_requires_number">Password must contain at least one number (0-9).</string>
+
+    <!-- Login Screen -->
+    <string name="m1_title">UM Water Refill Station Login</string>
+    <string name="m1_stage_notice">Sign in with your Universiti Malaya student or staff account.</string>
+    <string name="m1_email_label">UM Email</string>
+    <string name="m1_password_label">Password</string>
+    <string name="m1_login_label">Login</string>
+    <string name="m1_register_label">Don\'t have an account? Register here</string>
+    <string name="m1_reset_label">Forgot Password?</string>
+    <string name="m1_loading">Signing in…</string>
+
+    <!-- Register Screen -->
+    <string name="m1_register_title">Register Account</string>
+    <string name="m1_register_notice">Create an account using your official UM email.</string>
+    <string name="m1_confirm_password_label">Confirm Password</string>
+    <string name="m1_password_mismatch">Passwords do not match.</string>
+    <string name="m1_register_submit">Register</string>
+    <string name="m1_already_have_account">Already registered? Log in here</string>
+    <string name="m1_loading_register">Creating your account…</string>
+
+    <!-- Email Verification Screen -->
+    <string name="m1_verify_title">Verify Your UM Email</string>
+    <string name="m1_verify_notice">We have sent a verification email to your address. Please open your inbox and click the verification link before accessing the app.</string>
+    <string name="m1_verify_check_btn">I\'ve Verified My Email</string>
+    <string name="m1_verify_resend_btn">Resend Verification Email</string>
+    <string name="m1_verify_pending">Your email is not verified yet. Please check your inbox (or spam) and click the link, then tap above.</string>
+    <string name="m1_verify_resend_success">Verification email sent! Please check your inbox.</string>
+    <string name="m1_verify_send_failed">Account created, but verification email could not be sent (%s). Please tap below to resend.</string>
+    <string name="m1_network_error">Network error. Please check your internet connection and try again.</string>
+    <string name="m1_loading_verification">Checking verification status…</string>
+
+    <!-- Password Reset Screen -->
+    <string name="m1_reset_title">Forgot Password</string>
+    <string name="m1_reset_notice">Enter your registered UM email. We will send you instructions to reset your password.</string>
+    <string name="m1_reset_submit">Send Password Reset Link</string>
+    <string name="m1_reset_back_login">Back to Login</string>
+    <string name="m1_reset_neutral_notice">If an eligible account exists for this UM email, a password reset link has been sent. Please check your inbox.</string>
+    <string name="m1_loading_reset">Sending reset link…</string>
+
+    <!-- Profile Screen -->
+    <string name="m1_profile_title_view">My Profile</string>
+    <string name="m1_profile_title_create">Complete Your Profile</string>
+    <string name="m1_profile_title_edit">Edit Profile</string>
+    <string name="m1_profile_notice">Your profile information helps identify station reporters and maintenance staff across campus.</string>
+    <string name="m1_display_name_label">Display Name / Full Name</string>
+    <string name="m1_faculty_label">Faculty (e.g., FSKTM, Faculty of Science)</string>
+    <string name="m1_college_label">Residential College / Off-Campus</string>
+    <string name="m1_profile_save_btn">Save Profile</string>
+    <string name="m1_profile_edit_btn">Edit Profile Details</string>
+    <string name="m1_profile_saved_success">Profile saved successfully!</string>
+    <string name="m1_loading_profile">Loading profile…</string>
+    <string name="m1_loading_save_profile">Saving profile…</string>
+
+    <!-- User Roles & Role Dashboards -->
+    <string name="m1_role_label">Assigned Account Role</string>
+    <string name="m1_role_display">Role: %1$s</string>
+    <string name="m1_role_reporter">Reporter (Student / Staff)</string>
+    <string name="m1_role_maintenance_staff">Maintenance Staff</string>
+    <string name="m1_role_admin">System Administrator</string>
+    <string name="m1_role_protected_notice">Roles are assigned by system administrators and cannot be self-modified.</string>
+    <string name="m1_go_to_dashboard">Open Role Dashboard</string>
+
+    <!-- Main Destination (Reporter) -->
+    <string name="m1_main_title">UM Water Refill Station Portal</string>
+    <string name="m1_main_notice">Report issues, check station status, and locate water refill stations across UM.</string>
+    <string name="m1_main_placeholder_header">Water Refill Stations &amp; Reports</string>
+    <string name="m1_main_placeholder_content">Modules 2–6 Interactive Station Map, Issue Reports, and Status Tracking will load here.</string>
+
+    <!-- Maintenance Staff Dashboard -->
+    <string name="m1_staff_dashboard_title">Maintenance Staff Dashboard</string>
+    <string name="m1_staff_dashboard_notice">Welcome to UM Water Refill Maintenance Portal.</string>
+    <string name="m1_staff_placeholder_header">Station Repair Work Orders</string>
+    <string name="m1_staff_placeholder_content">Modules 2–6 Maintenance Work Orders and Inspection Tasks will load here.</string>
+
+    <!-- Admin Dashboard -->
+    <string name="m1_admin_dashboard_title">System Admin Control Panel</string>
+    <string name="m1_admin_dashboard_notice">Welcome to UM Water Refill System Administration.</string>
+    <string name="m1_admin_placeholder_header">Station &amp; System Administration</string>
+    <string name="m1_admin_placeholder_content">Modules 2–6 Station Management, Staff Assignments, and System Metrics will load here.</string>
 </resources>

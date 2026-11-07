@@ -71,21 +71,29 @@
             android:id="@+id/m1_feedback"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:accessibilityLiveRegion="polite"
-            android:text="@string/m1_auth_unavailable" />
+            android:layout_marginTop="12dp"
+            android:accessibilityLiveRegion="polite" />
         <Button
             android:id="@+id/m1_register"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
             android:minHeight="48dp"
-            android:text="@string/m1_register_label" />
+            android:text="@string/m1_register_label"
+            android:textColor="@color/m1_lavender_light"
+            android:textSize="14sp" />
         <Button
             android:id="@+id/m1_forgot_password"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
             android:minHeight="48dp"
-            android:text="@string/m1_reset_label" />
+            android:text="@string/m1_reset_label"
+            android:textColor="@color/m1_lavender_light"
+            android:textSize="14sp" />
     </LinearLayout>
 </ScrollView>

@@ -1,5 +1,12 @@
 # Module 1 first Login UI stage — 2026-11-02
 
+> **HISTORICAL / SUPERSEDED — first UI-only stage (2026-11-02).**
+> Preserved for coursework walkthrough, AI-usage and original build evidence.
+> The body below describes that earlier stage, including its old Git boundary and item-lending assumptions.
+> For the current Water Refill app use [README](../../README.md) and [INTEGRATION](../../INTEGRATION.md).
+> Module 1 now includes Firebase and roles; the current checkout has project-local Git metadata.
+
+
 ## Confirmed project and scope
 Root: C:/Users/Vincent Loh/AndroidStudioProjects/UMBorrowBuddy.
 Project: UMBorrowBuddy; single :app, Java 11 source/target, XML Views.
