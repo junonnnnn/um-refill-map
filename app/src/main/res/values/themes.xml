@@ -1,0 +1,22 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.UMBorrowBuddy" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <item name="android:borderlessButtonStyle">@style/Widget.UMBorrowBuddy.Button.Borderless</item>
+        <item name="materialButtonOutlinedStyle">@style/Widget.UMBorrowBuddy.Button.Outlined</item>
+    </style>
+
+    <style name="Theme.UMBorrowBuddy" parent="Base.Theme.UMBorrowBuddy" />
+
+    <!-- Custom borderless/link button style with light lavender text for high contrast -->
+    <style name="Widget.UMBorrowBuddy.Button.Borderless" parent="Widget.Material3.Button.TextButton">
+        <item name="android:textColor">@color/m1_lavender_light</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <!-- Custom outlined button style with light lavender border and text -->
+    <style name="Widget.UMBorrowBuddy.Button.Outlined" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="android:textColor">@color/m1_lavender_light</item>
+        <item name="strokeColor">@color/m1_lavender_light</item>
+    </style>
+</resources>

@@ -1,0 +1,69 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions for session authentication & eligibility
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isVerifiedUmUser() {
+      return isAuthenticated()
+        && request.auth.token.email_verified == true
+        && (request.auth.token.email.matches(".*@siswa\\.um\\.edu\\.my$")
+            || request.auth.token.email.matches(".*@um\\.edu\\.my$"));
+    }
+
+    function isOwner(userId) {
+      return isVerifiedUmUser() && request.auth.uid == userId;
+    }
+
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+
+    function isStaffOrAdmin() {
+      return isVerifiedUmUser()
+        && (getUserData().role == 'MAINTENANCE_STAFF' || getUserData().role == 'ADMIN');
+    }
+
+    // =========================================================================
+    // MODULE 1: User Profiles & Roles (users/{userId})
+    // =========================================================================
+    match /users/{userId} {
+      // Profile reads: Users can read their own profile; Maintenance Staff and Admins can read user profiles to inspect issue reports/work orders.
+      allow read: if isOwner(userId) || isStaffOrAdmin();
+
+      // Profile creation: Users can create their own document ONLY with default 'REPORTER' role, matching Auth UID and email.
+      allow create: if isOwner(userId)
+                    && request.resource.data.uid == userId
+                    && request.resource.data.email == request.auth.token.email
+                    && (!('role' in request.resource.data) || request.resource.data.role == 'REPORTER');
+
+      // Profile updates: Users can update their profile fields (displayName, faculty, college),
+      // but CANNOT modify immutable system fields (uid, email, createdAt) or change their role.
+      // Privileged roles (MAINTENANCE_STAFF, ADMIN) must be assigned via Firebase Console or Admin SDK.
+      allow update: if isOwner(userId)
+                    && request.resource.data.uid == resource.data.uid
+                    && request.resource.data.email == resource.data.email
+                    && request.resource.data.createdAt == resource.data.createdAt
+                    && request.resource.data.role == (('role' in resource.data) ? resource.data.role : 'REPORTER');
+
+      // Client profile deletion is forbidden
+      allow delete: if false;
+    }
+
+    // =========================================================================
+    // UM WATER REFILL SYSTEM: TEAMMATES' COLLECTIONS (Modules 2 - 6)
+    // =========================================================================
+    // Coordinated collections will be added here by teammates:
+    // - match /refill_stations/{stationId} { ... }
+    // - match /maintenance_reports/{reportId} { ... }
+    // - match /work_orders/{orderId} { ... }
+    //
+    // Default fallback: deny undeclared paths
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
