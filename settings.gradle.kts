@@ -22,6 +22,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "UMBorrowBuddy"
+rootProject.name = "UM RefillMap"
 include(":app")
  

@@ -1,8 +1,9 @@
-# UM Water Refill Station Reporting & Maintenance
+# UM RefillMap — UM Water Refill Station Reporting & Maintenance
 
 WIA2007 team Android application for reporting and maintaining UM water refill stations.
-The existing repository/project name is UMBorrowBuddy; this is no longer an item-lending app.
-Package and application ID remain `com.example.umborrowbuddy`.
+Current app branding and Gradle root project name are UM RefillMap.
+The local checkout folder remains UMBorrowBuddy; historical evidence keeps its original name.
+Java package and application ID remain `com.example.umborrowbuddy`.
 
 ## Read first
 

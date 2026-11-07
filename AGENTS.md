@@ -15,7 +15,7 @@
 - Keep package, namespace and application ID `com.example.umborrowbuddy`.
 - Gradle Kotlin DSL is build configuration; it does not authorize Kotlin/Compose screens.
 - Keep the single `:app` project and existing Gradle wrapper.
-- Do not rename the legacy project, theme or app label as incidental cleanup.
+- Keep legacy internal theme resource names stable during unrelated work; update the visible app label only when branding is explicitly requested.
 - Match the existing Activities, callbacks, AppCompat and Material Views approach.
 
 ## Module ownership

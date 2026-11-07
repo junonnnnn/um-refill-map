@@ -1,6 +1,7 @@
 # Integration contract
 
 Status: current source contract plus explicitly PROPOSED future contracts.
+Current app branding and Gradle root project name: UM RefillMap.
 Reviewed against branch `vincent` on 2026-11-07.
 Agents read [AGENTS.md](AGENTS.md) first, then only the relevant sections here.
 Use [README.md](README.md) for setup; historical evidence is excluded from default agent reading.
@@ -186,7 +187,7 @@ Record approvals in the PR; do not overwrite another module's files to resolve c
 
 ## Git and review workflow
 
-Verified local root and Git directory: UMBorrowBuddy and its own UMBorrowBuddy/.git.
+The local checkout folder remains UMBorrowBuddy with its own project-local `.git` directory.
 Branch inspected: vincent; origin: https://github.com/junonnnnn/um-borrow-buddy.git.
 Earlier parent-repository warnings describe historical checkouts, not this current boundary.
 PROPOSED branch naming: feature/m2-station-directory, feature/m3-issue-reporting, etc.
