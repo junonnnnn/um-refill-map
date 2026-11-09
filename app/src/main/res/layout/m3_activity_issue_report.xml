@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- CameraX 实时扫码预览框 -->
+    <androidx.camera.view.PreviewView
+        android:id="@+id/previewView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginBottom="16dp" />
+
+    <!-- 饮水机编号（扫码后会自动填充到这里） -->
+    <EditText
+        android:id="@+id/etDispenserId"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="饮水机编号 (扫码自动填充)"
+        android:inputType="text"
+        android:layout_marginBottom="12dp" />
+
+    <!-- 问题描述输入框 -->
+    <EditText
+        android:id="@+id/etDescription"
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
+        android:gravity="top"
+        android:hint="请描述水质或设施故障情况..."
+        android:inputType="textMultiLine"
+        android:layout_marginBottom="24dp" />
+
+    <!-- 提交工单按钮 -->
+    <Button
+        android:id="@+id/btnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="提交工单" />
+
+</LinearLayout>
