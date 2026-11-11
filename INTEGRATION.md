@@ -2,7 +2,8 @@
 
 Status: current source contract plus explicitly PROPOSED future contracts.
 Current app branding and Gradle root project name: UM RefillMap.
-Reviewed against branch `vincent` on 2026-11-07.
+Module 1 contract reviewed against branch `vincent` on 2026-11-07;
+Module 2 progress and checkout details updated against local `main` on 2026-11-11.
 Agents read [AGENTS.md](AGENTS.md) first, then only the relevant sections here.
 Use [README.md](README.md) for setup; historical evidence is excluded from default agent reading.
 
@@ -16,7 +17,12 @@ Use [README.md](README.md) for setup; historical evidence is excluded from defau
 - UserProfile/UserRole live under `com.example.umborrowbuddy.shared.model`.
 - Auth classes live under `com.example.umborrowbuddy.features.module1.auth`.
 - ProfileActivity lives under `com.example.umborrowbuddy.features.module1.profile`.
-- Modules 2–6 have dashboard placeholders only; their implementation is pending.
+- IMPLEMENTED: Module 2 standalone FSKTM map/directory under `features.module2`,
+  using bundled station data, MapLibre Native 13.6.1 and OpenFreeMap.
+- Reporter navigation still has its integration placeholder; Modules 3–6 remain pending.
+- Latest local build and 45 unit tests passed on 2026-11-11; Module 2 API 37 emulator
+  checks and limits are recorded locally in `docs/plans/2026-11-11-module-2-acceptance.md`;
+  that evidence is excluded from this commit.
 - Owner-reported: Module 1 passed physical-device tests, including all three roles.
 - UNVERIFIED: local rules deployment/testing and future cross-module flows.
 
@@ -31,11 +37,15 @@ Owner: Vincent; WIA2007 Authentication, User Roles & Profile.
 - FR3: create/view/edit displayName (1–60), faculty (1–100), residentialCollege (1–100).
 - Profile role display uses m1_profile_role; m1_profile_dashboard_btn returns to the assigned dashboard.
 - Schema, server-read error handling, APIs and three-role destinations are specified below.
-- Latest verified baseline: debug build and 43 local unit tests passed; device success is owner-reported.
+- Module 1 baseline: debug build and 43 local unit tests passed; the later combined
+  45-test result above includes Module 2. Physical-device success is owner-reported.
 
 ## Actual navigation
 
-1. Manifest launcher is LoginActivity; other declared Activities are not exported.
+1. Main manifest launcher is LoginActivity; other main Activities are not exported.
+   Debug builds also expose the StationDirectoryDemo alias targeting the
+   non-exported StationDirectoryActivity, with a separate debug task affinity.
+   This standalone demo does not use the sign-in flow below.
 2. LoginActivity checks an existing session onStart or authenticates entered credentials.
 3. Unverified users open VerifyEmailActivity; protected screens check AuthGuard.
 4. Verified login/verification retrieves `users/{currentAuthUid}` using Source.SERVER.
@@ -140,9 +150,33 @@ Local rules also protect uid/email/createdAt on updates; see security status bel
 These are responsibility/dependency proposals for future code, not existing public APIs.
 Each module owner implements its feature; shared changes require affected-owner review.
 
+## IMPLEMENTED Module 2 pilot contract
+
+- Scope: FSKTM only. StationDirectoryActivity reads
+  [m2_fsktm_stations.json](app/src/main/assets/m2_fsktm_stations.json).
+- Local record fields: `stationId`, `name`, `building`, `floor`, `landmark`,
+  `latitude`, `longitude`, `status`. These are asset fields, not an approved
+  Firestore schema. Station is package-private, not a shared cross-module API.
+- Preserve `fsktm-001` (Block B Entrance), `fsktm-002` (Block B Student Lounge),
+  and `fsktm-003` (Block A Refill Station) in any later storage migration.
+- Local status values: `AVAILABLE`, `OUT_OF_SERVICE`, `UNKNOWN`. All surveyed
+  records currently use `UNKNOWN`; no student report or maintenance update is wired.
+- Map/List retains the camera; identical coordinates share a count marker while
+  List entries stay separate. Both views open read-only station details.
+- Foreground location accepts approximate access. Startup centers within 500 m
+  of FSKTM when a fix is available; otherwise FSKTM is the default. My location
+  explicitly recenters. List sorts by straight-line distance, or name without a fix.
+- Current implementation choices: 15-second map feedback timeout and 12-second
+  location timeout. Offline map failure provides Retry while List stays usable.
+- PROPOSED: reporter map landing through existing Module 1 interfaces, approved
+  Firestore station reads, Module 3 selected-station handoff, and Module 4 confirmed
+  status updates. Student reports should leave station status unchanged until
+  staff/admin confirmation; that workflow is not yet implemented.
+
 ## PROPOSED station, report and maintenance contracts
 
-No models, repositories, collections or status workflows below are implemented here.
+The Firestore repositories, collections and status workflows below are not implemented.
+The local Module 2 asset model above does not freeze these backend contracts.
 Collection names mirror existing rules comments; those comments grant no access.
 Affected owners and integration lead must approve fields, permissions and indexes first.
 
@@ -152,7 +186,8 @@ Affected owners and integration lead must approve fields, permissions and indexe
 | `maintenance_reports/{reportId}` | stationId: string, reporterUid: string, description: string, status: string, createdAt/updatedAt: timestamp |
 | `work_orders/{workOrderId}` | reportId: string, stationId: string, assignedStaffUid: string or null, status: string, createdAt/updatedAt: timestamp |
 
-PROPOSED: generate a stable Firestore document ID once per station/report/work order.
+PROPOSED: retain the existing pilot station IDs as station document IDs; generate
+a stable ID once for each new station/report/work order.
 Never use a station display name, email address, list position or title as an identity.
 PROPOSED relationships:
 - reporterUid and assignedStaffUid reference `users/{FirebaseAuthUid}`.
@@ -169,8 +204,9 @@ Do not create old item-lending collections such as items/borrow_requests from hi
 
 ## Package, resource and shared-file ownership
 
-PROPOSED feature roots under `com.example.umborrowbuddy`:
-`features.module2` through `features.module6`; keep existing module1/auth and module1/profile.
+IMPLEMENTED feature root: `com.example.umborrowbuddy.features.module2`.
+PROPOSED roots: `features.module3` through `features.module6` under the same package;
+keep existing module1/auth and module1/profile.
 Java classes use PascalCase; methods/fields camelCase; resource names lowercase snake_case.
 Use m1_ through m6_ for owned layouts, IDs, strings and drawables; existing names remain stable.
 Example: `features.module2.StationDirectoryActivity`, `m2_activity_station_directory.xml`.
@@ -187,8 +223,9 @@ Record approvals in the PR; do not overwrite another module's files to resolve c
 
 ## Git and review workflow
 
-The local checkout folder remains UMBorrowBuddy with its own project-local `.git` directory.
-Branch inspected: vincent; origin: https://github.com/junonnnnn/um-borrow-buddy.git.
+The current checkout is `um-refill-map` with its own project-local `.git` directory.
+Inspected on 2026-11-11: branch `main`; origin `git@github.com:junonnnnn/um-refill-map.git`.
+Detailed Module 2 acceptance evidence under `docs/` remains local and uncommitted.
 Earlier parent-repository warnings describe historical checkouts, not this current boundary.
 PROPOSED branch naming: feature/m2-station-directory, feature/m3-issue-reporting, etc.
 Agree the integration target/default branch before opening or merging PRs.
@@ -224,7 +261,9 @@ Manual app success does not prove these local rules match production.
 
 - [ ] Designate integration lead, Firebase/rules owner and merge target.
 - [ ] Approve future schemas/IDs, status transitions, permissions and required indexes.
-- [ ] Build debug APK and pass existing plus changed-feature unit tests.
+- [x] Build debug APK and pass existing plus changed-feature unit tests (2026-11-11: 45 passed).
+- [x] Test the standalone Module 2 pilot on an API 37 emulator; see the local acceptance record.
+- [ ] Verify Module 2 on physical hardware, including real location acquisition.
 - [ ] Verify registration, verification, reset, profile persistence and logout on device.
 - [ ] Verify all three role destinations, account switch, missing profile and failed/invalid role reads.
 - [ ] Review/test rules for signed-out, unverified, owner, other-user, staff and admin identities.

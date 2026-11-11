@@ -1,0 +1,32 @@
+[
+  {
+    "stationId": "fsktm-001",
+    "name": "Block B Entrance",
+    "building": "Block B",
+    "floor": "Ground floor",
+    "landmark": "Use the left-side entrance. The station is immediately behind the door as you enter.",
+    "latitude": 3.128393,
+    "longitude": 101.650283,
+    "status": "UNKNOWN"
+  },
+  {
+    "stationId": "fsktm-002",
+    "name": "Block B Student Lounge",
+    "building": "Block B",
+    "floor": "First floor",
+    "landmark": "Inside the student lounge.",
+    "latitude": 3.128488,
+    "longitude": 101.650050,
+    "status": "UNKNOWN"
+  },
+  {
+    "stationId": "fsktm-003",
+    "name": "Block A Refill Station",
+    "building": "Block A",
+    "floor": "Ground floor",
+    "landmark": "Enter at ground level. The station is on the right behind the staircase directly ahead, opposite the Dean’s Office.",
+    "latitude": 3.128115,
+    "longitude": 101.650709,
+    "status": "UNKNOWN"
+  }
+]

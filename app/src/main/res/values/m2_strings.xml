@@ -1,0 +1,25 @@
+<resources>
+    <string name="m2_demo_title">FSKTM Refill Demo</string>
+    <string name="m2_title">Refill stations</string>
+    <string name="m2_map">Map</string>
+    <string name="m2_list">List</string>
+    <string name="m2_my_location">My location</string>
+    <string name="m2_loading">Loading map…</string>
+    <string name="m2_map_unavailable">Map unavailable</string>
+    <string name="m2_retry">Retry</string>
+    <string name="m2_location_unavailable">Current location unavailable.</string>
+    <string name="m2_location_settings">Allow location access in Android Settings to use My location.</string>
+    <string name="m2_settings">Settings</string>
+    <string name="m2_data_unavailable">Station data unavailable.</string>
+    <string name="m2_available">✓ Available</string>
+    <string name="m2_out_of_service">× Out of service</string>
+    <string name="m2_unknown">\? Unknown</string>
+    <string name="m2_legend">%1$s   %2$s   %3$s</string>
+    <string name="m2_station_position">%1$s · %2$s</string>
+    <string name="m2_station_distance">%1$s · ~%2$d m away</string>
+    <string name="m2_station_row">%1$s\n%2$s\n%3$s\n%4$s</string>
+    <plurals name="m2_station_count">
+        <item quantity="one">%d station</item>
+        <item quantity="other">%d stations</item>
+    </plurals>
+</resources>
