@@ -43,6 +43,39 @@
             android:text="@string/m2_list" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/m2_filters"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="48dp"
+            android:text="@string/m2_filters" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/m2_nearest"
+            style="@style/Widget.Material3.Button.TonalButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:minHeight="48dp"
+            android:text="@string/m2_nearest" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/m2_filter_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="16dp"
+        android:accessibilityLiveRegion="polite"
+        android:visibility="gone" />
+
     <TextView
         android:id="@+id/m2_data_error"
         android:layout_width="match_parent"
@@ -50,6 +83,15 @@
         android:accessibilityLiveRegion="polite"
         android:paddingHorizontal="16dp"
         android:text="@string/m2_data_unavailable"
+        android:visibility="gone" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/m2_data_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:minHeight="48dp"
+        android:text="@string/m2_retry"
         android:visibility="gone" />
 
     <FrameLayout

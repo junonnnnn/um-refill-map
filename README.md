@@ -2,7 +2,7 @@
 
 WIA2007 team Android application for reporting and maintaining UM water refill stations.
 Current app branding and Gradle root project name are UM RefillMap.
-The local checkout folder is `um-refill-map`; historical evidence keeps its original UMBorrowBuddy name.
+The local checkout folder is `um-refill-map`; historical evidence keeps its original name.
 Java package and application ID remain `com.example.umborrowbuddy`.
 
 ## Read first
@@ -17,42 +17,38 @@ Agents read AGENTS.md first, relevant INTEGRATION.md sections as needed, and thi
 
 ## Modules and status
 
-| Module | Owner    | Responsibility                       | Status in this checkout                                 |
-| ------ | -------- | ------------------------------------ | ------------------------------------------------------- |
-| 1      | Vincent  | Authentication, User Roles & Profile | Implemented                                             |
-| 2      | Jin Seng | Station Map & Directory              | IMPLEMENTED: standalone FSKTM demo; integration pending |
-| 3      | Jun Jing | Issue Reporting                      | Planned                                                 |
-| 4      | Jie Xin  | Maintenance Tracking                 | Planned                                                 |
-| 5      | Zhe Yu   | AI Report Assistance                 | Planned                                                 |
-| 6      | Jun Onn  | Community Participation              | Planned                                                 |
+| Module | Owner | Responsibility | Status in this checkout |
+|---|---|---|---|
+| 1 | Vincent | Authentication, User Roles & Profile | Implemented |
+| 2 | Jin Seng | Station Map & Directory | Implemente |
+| 3 | Jun Jing | Issue Reporting | Planned |
+| 4 | Jie Xin | Maintenance Tracking | Planned |
+| 5 | Zhe Yu | AI Report Assistance | Planned |
+| 6 | Jun Onn | Community Participation | Planned |
 
 Module 1 includes UM-email registration, email verification, login, password reset,
 profile creation/editing, logout and server-backed role routing.
 REPORTER opens MainActivity; MAINTENANCE_STAFF opens StaffDashboardActivity;
 ADMIN opens AdminDashboardActivity.
-The dashboards still contain integration placeholders. Module 2 is available through
-its separate debug launcher; reporter sign-in does not yet open the map.
+MainActivity hosts Module 2 after server-backed reporter validation. Profile/logout
+and the staff/admin destinations are preserved. Modules 3–6 remain planned.
 
-Module 2 covers three FSKTM stations using MapLibre Native 13.6.1 and OpenFreeMap.
-It includes Map/List switching, read-only station details, foreground location,
-distance/name ordering, shared-coordinate markers, and map failure/Retry feedback.
-The bundled records retain IDs `fsktm-001` through `fsktm-003`; all statuses remain
-Unknown pending on-site confirmation. Other UM areas are future scope.
+Module 2 includes a campus map with status pins, station details and open reports,
+faculty/college/water-type filters, nearest working station and external walking directions.
+The standalone FSKTM demo retains three surveyed stations with Unknown status.
+Missing water/maintenance details are shown as Not recorded.
 
 ## Verification status
 
-- Latest verification, 11 November 2026: debug build passed with Google Services
-  processing included; 45 local unit tests passed, including two Module 2 tests.
-- Module 2 passed API 37 emulator checks for station details, camera retention,
-  permissions, simulated locations, offline recovery, shared pins, rotation,
-  larger text and keyboard access. Detailed acceptance evidence remains local in
-  `docs/plans/2026-11-11-module-2-acceptance.md` and is excluded from this commit.
-- Vincent reports successful physical-device Module 1 testing, including all three roles.
-- This manual result is owner-reported; it is not an automated device test report.
-- Local `firestore.rules` deployment and rules-test results are not confirmed.
-- UNVERIFIED: Module 2 physical-device/API 24 behavior, TalkBack and real location
-  acquisition. Deterministic location checks used an emulator test provider.
-- Cross-module integration and Modules 3–6 acceptance are pending.
+- Latest saved results, 12 November 2026: debug build, 56 unit tests and 25 API 37
+  emulator tests passed, with no failures or skips.
+- Local station/report rules checks passed; deployment remains UNVERIFIED.
+- Vincent reports successful physical-device Module 1 testing across all three roles.
+- Module 2 physical GPS, actual walking routes, API 24 and TalkBack remain UNVERIFIED.
+- Pending: verified campus inventory/metadata, live rules rollout and Module 3/4 writers.
+- The local Firebase fixture helper is currently missing; restore it before replaying
+  the full integration suite. Detailed acceptance remains in
+  `docs/plans/2026-11-12-module-2-campus-acceptance.md`.
 
 ## Development environment
 
@@ -67,7 +63,7 @@ Unknown pending on-site confirmation. Other UM areas are future scope.
 
 1. Obtain the team checkout from https://github.com/junonnnnn/um-refill-map.
 2. Open the repository root in Android Studio and inspect branch/dirty state.
-3. Use your approved working branch; the 11 November local inspection was on `main`.
+3. Use your approved working branch; Module 2 work is on `module2`.
 4. Install SDK platform 37 and let Studio provision the configured Gradle toolchain.
 5. Request matching `google-services.json` from the authorized Firebase project owner.
 6. Use the approved private team channel; place the file at `app/google-services.json`.
@@ -88,20 +84,25 @@ Run from the repository root in Windows PowerShell:
 .\gradlew.bat assembleDebug testDebugUnitTest
 ```
 
-On macOS/Linux use `./gradlew assembleDebug testDebugUnitTest`.
-If the wrapper lacks execute permission, use `bash gradlew assembleDebug testDebugUnitTest`;
-this was the verified command in the current checkout.
+On macOS/Linux use `bash gradlew assembleDebug testDebugUnitTest`.
 Debug APK: `app/build/outputs/apk/debug/app-debug.apk`.
 Local test report: `app/build/reports/tests/testDebugUnitTest/index.html`.
-Unit tests cover validators, profile model, guard checks, role parsing/routing,
-read failures, station grouping and ordering.
+Unit tests cover authentication/profile/roles, station validation, filters, nearest selection
+and report states. Emulator report: `app/build/reports/androidTests/connected/debug/index.html`.
 Firebase integration requires connectivity; role reads intentionally require the server.
 
 ## Run the Module 2 demo
 
-Install the debug APK on an API 24+ emulator/device and open **FSKTM Refill Demo**
-from the app drawer. Its debug-only launcher uses a separate task from Login.
-The normal **UM RefillMap** launcher retains Module 1 navigation.
+Start an Android emulator, then run from the project root:
+
+```bash
+bash gradlew assembleDebug
+adb install -r app/build/outputs/apk/debug/app-debug.apk
+```
+
+Open **FSKTM Refill Demo** from the app drawer. It uses bundled data without Firebase.
+The normal **UM RefillMap** launcher uses Module 1 login and the configured backend.
+If needed, use the SDK's `platform-tools/adb`. CLI builds do not require Studio Gradle sync.
 
 ## Before team integration
 

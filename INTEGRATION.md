@@ -3,7 +3,7 @@
 Status: current source contract plus explicitly PROPOSED future contracts.
 Current app branding and Gradle root project name: UM RefillMap.
 Module 1 contract reviewed against branch `vincent` on 2026-11-07;
-Module 2 progress and checkout details updated against local `main` on 2026-11-11.
+Module 2 campus development updated against local `main` on 2026-11-12.
 Agents read [AGENTS.md](AGENTS.md) first, then only the relevant sections here.
 Use [README.md](README.md) for setup; historical evidence is excluded from default agent reading.
 
@@ -17,14 +17,11 @@ Use [README.md](README.md) for setup; historical evidence is excluded from defau
 - UserProfile/UserRole live under `com.example.umborrowbuddy.shared.model`.
 - Auth classes live under `com.example.umborrowbuddy.features.module1.auth`.
 - ProfileActivity lives under `com.example.umborrowbuddy.features.module1.profile`.
-- IMPLEMENTED: Module 2 standalone FSKTM map/directory under `features.module2`,
-  using bundled station data, MapLibre Native 13.6.1 and OpenFreeMap.
-- Reporter navigation still has its integration placeholder; Modules 3–6 remain pending.
-- Latest local build and 45 unit tests passed on 2026-11-11; Module 2 API 37 emulator
-  checks and limits are recorded locally in `docs/plans/2026-11-11-module-2-acceptance.md`;
-  that evidence is excluded from this commit.
-- Owner-reported: Module 1 passed physical-device tests, including all three roles.
-- UNVERIFIED: local rules deployment/testing and future cross-module flows.
+- IMPLEMENTED: Module 2 campus map/directory under `features.module2`, using
+  MapLibre Native 13.6.1 and OpenFreeMap. MainActivity hosts the live Firestore
+  directory after server profile validation; the debug demo uses bundled records.
+- Owner-reported: Module 1 physical-device success across all roles. Module 2 physical
+  GPS/routes, API 24 and TalkBack remain UNVERIFIED.
 
 ## Module 1 requirements
 
@@ -38,7 +35,7 @@ Owner: Vincent; WIA2007 Authentication, User Roles & Profile.
 - Profile role display uses m1_profile_role; m1_profile_dashboard_btn returns to the assigned dashboard.
 - Schema, server-read error handling, APIs and three-role destinations are specified below.
 - Module 1 baseline: debug build and 43 local unit tests passed; the later combined
-  45-test result above includes Module 2. Physical-device success is owner-reported.
+  56-test result above includes Module 2. Physical-device success is owner-reported.
 
 ## Actual navigation
 
@@ -65,7 +62,11 @@ The latter two names are relative to `com.example.umborrowbuddy`.
 MainActivity redirects non-reporters; AdminDashboardActivity permits ADMIN.
 StaffDashboardActivity currently permits MAINTENANCE_STAFF and ADMIN.
 Canonical ADMIN routing still selects AdminDashboardActivity.
-All three destinations expose profile/logout and preserve future module placeholders.
+All three destinations expose profile/logout. MainActivity replaces its reporter
+placeholder with StationDirectoryFragment only after a valid REPORTER profile is
+retrieved. Loading/read errors expose Retry; missing profiles still open profile
+creation. Restored map views and late callbacks remain gated until revalidation.
+The staff/admin placeholders are unchanged.
 
 ## Existing public Java APIs
 
@@ -147,43 +148,61 @@ Local rules also protect uid/email/createdAt on updates; see security status bel
 | 5 / Zhe Yu | AI Report Assistance | M3 draft/report context; approved AI backend/configuration |
 | 6 / Jun Onn | Community Participation | M1 UID; agree whether interactions attach to station or report |
 
-These are responsibility/dependency proposals for future code, not existing public APIs.
 Each module owner implements its feature; shared changes require affected-owner review.
+The expanded Module 2 contracts below were approved on 2026-11-12.
 
-## IMPLEMENTED Module 2 pilot contract
+## Implemented Module 2 contract
 
-- Scope: FSKTM only. StationDirectoryActivity reads
-  [m2_fsktm_stations.json](app/src/main/assets/m2_fsktm_stations.json).
-- Local record fields: `stationId`, `name`, `building`, `floor`, `landmark`,
-  `latitude`, `longitude`, `status`. These are asset fields, not an approved
-  Firestore schema. Station is package-private, not a shared cross-module API.
-- Preserve `fsktm-001` (Block B Entrance), `fsktm-002` (Block B Student Lounge),
-  and `fsktm-003` (Block A Refill Station) in any later storage migration.
-- Local status values: `AVAILABLE`, `OUT_OF_SERVICE`, `UNKNOWN`. All surveyed
-  records currently use `UNKNOWN`; no student report or maintenance update is wired.
-- Map/List retains the camera; identical coordinates share a count marker while
-  List entries stay separate. Both views open read-only station details.
-- Foreground location accepts approximate access. Startup centers within 500 m
-  of FSKTM when a fix is available; otherwise FSKTM is the default. My location
-  explicitly recenters. List sorts by straight-line distance, or name without a fix.
-- Current implementation choices: 15-second map feedback timeout and 12-second
-  location timeout. Offline map failure provides Retry while List stays usable.
-- PROPOSED: reporter map landing through existing Module 1 interfaces, approved
-  Firestore station reads, Module 3 selected-station handoff, and Module 4 confirmed
-  status updates. Student reports should leave station status unchanged until
-  staff/admin confirmation; that workflow is not yet implemented.
+MainActivity hosts StationDirectoryFragment after server-backed reporter validation.
+StationRepository reads all campus stations; the standalone demo uses the original
+three FSKTM records. Preserve IDs `fsktm-001`–`fsktm-003` and their surveyed facts.
 
-## PROPOSED station, report and maintenance contracts
+Map/List share faculty, residential-college and water-type filters. Nearest working
+selects AVAILABLE stations within those filters using approximate straight-line distance.
+Walking directions opens an external Maps/browser URL with `travelmode=walking`.
+Shared pins show a count coloured by worst status: out of service, reported, unknown, working.
 
-The Firestore repositories, collections and status workflows below are not implemented.
-The local Module 2 asset model above does not freeze these backend contracts.
-Collection names mirror existing rules comments; those comments grant no access.
-Affected owners and integration lead must approve fields, permissions and indexes first.
+Path: `refill_stations/{stationId}`; document ID is canonical.
+
+| Field | Firestore contract |
+|---|---|
+| name, building, floor, landmark | Required nonblank strings; landmark is the exact spot |
+| faculty, college | Optional nonblank strings; at least one required |
+| location | Required GeoPoint |
+| status | AVAILABLE (Working), REPORTED, OUT_OF_SERVICE or UNKNOWN |
+| waterTypes | Optional array: COLD, HOT, FILTERED; multiple values supported |
+| lastCleanedAt, lastFilterChangedAt | Optional timestamps |
+
+Missing optional metadata shows Not recorded; malformed records show an error.
+Snapshots refresh pins, List and open details. Loading, empty, cache and error/Retry
+states remain explicit. Subscriptions stop with the screen; cached data never bypasses
+Module 1's server profile check. Module 2 performs no station/report writes.
+
+Path: `maintenance_reports/{reportId}`, queried by canonical `stationId`.
+Required read fields: nonblank stationId/description and status OPEN, IN_PROGRESS,
+RESOLVED or CLOSED. Optional createdAt is a timestamp. Details show OPEN/IN_PROGRESS
+reports newest first. Missing history in the standalone demo is explicitly unavailable.
+
+Local rules allow verified UM reads of both collections and deny all client writes.
+Report documents are visible to verified campus users: keep sensitive personal details,
+private attachments and internal notes in separately protected storage. No deployment
+or verified campus inventory is claimed. Module 3/4 own submission and maintenance writers.
+
+Public sender: `StationReportContract.forStation(Context, String)` in `features.module2`.
+- Action: `com.example.umborrowbuddy.action.REPORT_ISSUE`.
+- String extra: `com.example.umborrowbuddy.extra.STATION_ID`.
+- Package-restricted; missing/blank IDs rejected; missing receiver shows unavailable feedback.
+- Module 3 must supply a non-exported Activity with this action and DEFAULT category,
+  validate the station ID and reuse existing authentication checks.
+
+## PROPOSED report and maintenance contracts
+
+The report read fields above are approved and implemented. Report submission,
+work-order repositories and maintenance write workflows remain unimplemented.
 
 | PROPOSED path | Candidate fields; not a frozen schema |
 |---|---|
-| `refill_stations/{stationId}` | name: string, location: GeoPoint, status: string, createdAt/updatedAt: timestamp |
-| `maintenance_reports/{reportId}` | stationId: string, reporterUid: string, description: string, status: string, createdAt/updatedAt: timestamp |
+| `maintenance_reports/{reportId}` writer | Approved reader above; writer/author/updatedAt validation remains Module 3 work |
 | `work_orders/{workOrderId}` | reportId: string, stationId: string, assignedStaffUid: string or null, status: string, createdAt/updatedAt: timestamp |
 
 PROPOSED: retain the existing pilot station IDs as station document IDs; generate
@@ -224,8 +243,7 @@ Record approvals in the PR; do not overwrite another module's files to resolve c
 ## Git and review workflow
 
 The current checkout is `um-refill-map` with its own project-local `.git` directory.
-Inspected on 2026-11-11: branch `main`; origin `git@github.com:junonnnnn/um-refill-map.git`.
-Detailed Module 2 acceptance evidence under `docs/` remains local and uncommitted.
+Inspected on 2026-11-12: branch `module2`; origin `git@github.com:junonnnnn/um-refill-map.git`.
 Earlier parent-repository warnings describe historical checkouts, not this current boundary.
 PROPOSED branch naming: feature/m2-station-directory, feature/m3-issue-reporting, etc.
 Agree the integration target/default branch before opening or merging PRs.
@@ -251,18 +269,28 @@ Onboarding grants no permission to deploy rules, enable services or alter live u
 
 ## Local rules and acceptance
 
-Local firestore.rules is NOT CONFIRMED DEPLOYED OR TESTED.
+Local firestore.rules is NOT CONFIRMED DEPLOYED.
 It allows verified UM owners to read/create/update their own profile with identity restrictions.
 Verified staff/admin may read user profiles; profile deletion and client role changes are denied.
 Creation currently allows an omitted role or REPORTER; the repository always writes REPORTER.
 It does not enforce every client field constraint; rules hardening needs separate review/tests.
-All undeclared paths, including proposed Modules 2–6 collections, are denied by the local file.
+Module 2's campus station/report read-only matches have local emulator coverage. Module 1 rules are
+unchanged and still need their broader rules acceptance checks.
+All undeclared paths, including work_orders and future Modules 5–6 collections, are denied.
+maintenance_reports is explicitly declared for verified UM reads; all its client writes are denied.
 Manual app success does not prove these local rules match production.
 
 - [ ] Designate integration lead, Firebase/rules owner and merge target.
-- [ ] Approve future schemas/IDs, status transitions, permissions and required indexes.
-- [x] Build debug APK and pass existing plus changed-feature unit tests (2026-11-11: 45 passed).
+- [x] Approve reporter integration, pilot reads and Module 3 handoff (2026-11-11).
+- [x] Approve expanded campus metadata, filters, directions and report reads (2026-11-12).
+- [ ] Approve other modules' schemas, status transitions, write permissions and indexes.
+- [x] Build debug APK and pass existing plus changed-feature unit tests (2026-11-12: 56 passed).
 - [x] Test the standalone Module 2 pilot on an API 37 emulator; see the local acceptance record.
+- [x] Test reporter integration, campus features, recovery and handoff locally (25 emulator tests).
+- [x] Test Module 2 verified/ineligible reads and denied client writes against local rules.
+- [ ] Restore the missing local fixture/rules helper before replaying Firebase checks.
+- [ ] Backend owner: deploy approved station/report rules and populate verified campus records.
+- [ ] Module 3/4 owners: supply report submission/receiver, public reports and status/maintenance-date writes.
 - [ ] Verify Module 2 on physical hardware, including real location acquisition.
 - [ ] Verify registration, verification, reset, profile persistence and logout on device.
 - [ ] Verify all three role destinations, account switch, missing profile and failed/invalid role reads.
