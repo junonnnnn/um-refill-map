@@ -53,11 +53,21 @@ service cloud.firestore {
       allow delete: if false;
     }
 
+    // MODULE 2: Verified UM campus directory and report reads; writes stay server-owned.
+    match /refill_stations/{stationId} {
+      allow read: if isVerifiedUmUser();
+      allow write: if false;
+    }
+
+    match /maintenance_reports/{reportId} {
+      allow read: if isVerifiedUmUser();
+      allow write: if false;
+    }
+
     // =========================================================================
-    // UM WATER REFILL SYSTEM: TEAMMATES' COLLECTIONS (Modules 2 - 6)
+    // UM WATER REFILL SYSTEM: TEAMMATES' COLLECTIONS (Modules 3 - 6)
     // =========================================================================
     // Coordinated collections will be added here by teammates:
-    // - match /refill_stations/{stationId} { ... }
     // - match /maintenance_reports/{reportId} { ... }
     // - match /work_orders/{orderId} { ... }
     //
